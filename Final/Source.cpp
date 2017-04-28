@@ -9,6 +9,7 @@ int crowbar = 0;
 int taser = 0;
 int keyDang = 0;
 int passCode = 0;
+int Knife = 0;
 
 void nuGame();
 void loadGame();
@@ -504,7 +505,8 @@ void cafe()
 		{
 		case 'L':
 		case 'l':
-			cout << " \n";
+			cout << "You look around and it seems to be a normal cafeteria just more advanced than what you're used too. \n";
+			cout << "You also see different kitchen utensils inlcuding a knife.\n";
 			break;
 		case 'N':
 		case 'n':
@@ -526,7 +528,16 @@ void cafe()
 			break;
 		case 'G':
 		case 'g':
-			cout << " ";
+			cout << "What would you like to pick up? \n";
+			cin.ignore(); //ignores other things that were typed before here
+			getline(cin, pickup); //so this only accepts stuff after the line
+			if (pickup == "Knife" || pickup == "knife") //two spellings in case the user doesn't want to use capital letters
+			{
+				Knife = 1;
+				cout << "You've picked up the Knife. It has been added to your inventory. \n";
+			}
+			else
+				cout << "That's not here. \n";
 			break;
 		case 'M':
 		case 'm':
