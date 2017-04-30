@@ -823,6 +823,7 @@ void rm4()
 			}
 			else
 				cout << "That's not here. \n";
+			break;
 		case 'M':
 		case 'm':
 			main();
