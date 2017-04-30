@@ -9,6 +9,7 @@ int crowbar = 0;
 int taser = 0;
 int keyDang = 0;
 int passCode = 0;
+int Yes = 0;
 int Knife = 0;
 
 void nuGame();
@@ -789,7 +790,9 @@ void rm4()
 		{
 		case 'L':
 		case 'l':
-			cout << " \n";
+			cout << "You walk in and see multiple tanks of water harvesting humans inside them. \n";
+			cout << "You also see somthing glimmering in the corner of the room and decide to take a look at it.\n";
+			cout << "It's an unknown alien object you've never seen before.\n";
 			break;
 		case 'N':
 		case 'n':
@@ -810,7 +813,16 @@ void rm4()
 			break;
 		case 'G':
 		case 'g':
-			cout << " ";
+			cout << "Would you like to pick up the unknown item? \n";
+			cin.ignore(); //ignores other things that were typed before here
+			getline(cin, pickup); //so this only accepts stuff after the line
+			if (pickup == "Yes" || pickup == "yes") //two spellings in case the user doesn't want to use capital letters
+			{
+				Yes = 1;
+				cout << "You've picked up the unknown object. It has been added to your inventory. \n";
+			}
+			else
+				cout << "That's not here. \n";
 		case 'M':
 		case 'm':
 			main();
