@@ -77,7 +77,7 @@ void roomName()
 		cout << "Did not recognize that command. Please try something. \n";
   	}
 	
-	}
+	} while (cond != 1);
 }
 
 So in case L you could look around and maybe find a sword or a dog or something. 
