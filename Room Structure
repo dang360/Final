@@ -59,6 +59,14 @@ void roomName()
 			}
 			else
 				cout << "That's not here. \n";
+		break;
+	case 't':
+	case 'T':
+		if (wobbly > 1)
+			cout << wobbly << "minutes \n";
+		else
+			cout << wobbly << "minute remaining. Please hurry!\n";
+		break;		
 	case 'M':
 	case 'm':
 		main();
