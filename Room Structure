@@ -60,13 +60,41 @@ void roomName()
 			else
 				cout << "That's not here. \n";
 		break;
-	case 't':
-	case 'T':
-		if (wobbly > 1)
-			cout << wobbly << " minutes \n";
-		else
-			cout << wobbly << " minute remaining. Please hurry!\n";
-		break;		
+	case 'I':
+	case 'i':
+					cout << "You're carrying: \n";
+				if (crowbar == 1)
+						cout << "The crowbar \n";
+				if (taser == 1)
+						cout << "The taser \n";
+				if (Knife == 1)
+					cout << "The knife \n";
+				if (code == 1)
+						cout << "The code in the diary: '1CqM2MvB3EoR' \n";
+				if (keyDang == 1)
+						cout << "The First Key \n";
+				if (key2 == 1)
+						cout << "The Second Key \n";
+				if (key3 == 1)
+						cout << "The Third Key \n";
+				if (Yes == 1)
+						cout << "The alien object \n";
+			break;
+	case 'p':
+	case 'P':
+			if (pda == 1)
+			{
+				cout << "You are in good health. \n";
+				if (wobbly > 1)
+					cout << wobbly << " minutes \n";
+				else
+					cout << wobbly << " minute remaining. Please hurry!\n";
+				cout << "You're carrying: \n";
+				break;
+			}
+			else
+				cout << "Did not recognize that command. Please try something else. \n";
+			break;	
 	case 'M':
 	case 'm':
 		main();
