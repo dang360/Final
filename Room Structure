@@ -89,7 +89,6 @@ void roomName()
 					cout << wobbly << " minutes \n";
 				else
 					cout << wobbly << " minute remaining. Please hurry!\n";
-				cout << "You're carrying: \n";
 				break;
 			}
 			else
