@@ -1,20 +1,30 @@
 #include <iostream>
 #include <fstream>
-#include <cstdlib>
 #include <string>
+#include <chrono>
+#include <future>
 using namespace std;
 
-bool cond = 0;
-int crowbar = 0;
-int taser = 0;
-int keyDang = 0;
+bool cond = 0, cond2 = 0, cond3 = 0;
+bool crowbar = 0, taser = 0, Knife = 0;
+
+bool cabinet = 0, code = 0;
+
+bool keyDang = 0, key2 = 0, key3 = 0;
+
 int passCode = 0;
-int Yes = 0;
-int Knife = 0;
+
+bool Yes = 0;
+
+bool computer = 0, pda = 0;
+
+bool timeLoss = 0;
+
+int wobbly = 5;
 
 void nuGame();
-void loadGame();
 void controls();
+void timer();
 
 void abandonedRoom();
 
@@ -34,80 +44,55 @@ void rm4();
 void engineRm();
 void weaponsRm();
 void commsRm();
+
 void bridge();
-//void airLock();
+void bridgeKeys();
+
+void endGame();
 
 int main()
 {
-	int menuChoice;
+	char menuChoice;
 
 	cout << "Welcome to our Adventure Game! \n"; //need a name
 	cout << "Would you like to: \n";
 	cout << "\t 1. Start a New Game\n";
-	// cout << "\t 2. Load a Saved Game\n";
-	cout << "\t 3. Look at the Game Controls\n";
-	cout << "\t 4. Quit \n";
-	cout << "Please choose between options 1-4. \n";
+	cout << "\t 2. Look at the Game Controls\n";
+	cout << "\t 3. Quit \n";
+	cout << "Please choose between options 1, 2, and 3. \n";
 	cin >> menuChoice;
-
 	switch (menuChoice)
 	{
-	case 1:
+	case '1':
 		nuGame();
+
 		break;
-		/*case 2:
-		loadGame();
-		break;*/
-	case 3:
+	case '2':
 		controls();
 		break;
-	case 4:
-		return 0;
+	case '3':
+		exit(0);
 	default:
-		cout << "Please choose between options 1-4. \n \n";
-		cout << "Except 2. 2 is broked. \n";
+		cout << "Please choose between options 1, 2, and 3. \n \n";
 		main();
 		break;
 	}
+
+	return 0;
 }
 
 void nuGame() //function to start a new game, can't be void
 {
 	string name;
-	//	char gender; //don't feel like we need gender so leaving it out for now, dont even really need name yet
-	string savePt;
-	ofstream outP;
 
 	cout << "Starting a New Game. \n";
 	cout << "Please enter the name you'd like to be called. \n"; //name
 	cin.ignore();
 	getline(cin, name);
-	//	cout << "Please enter your gender (f/m). \n";
-	//	cin >> gender;
-	/*cout << "Would you like to save to slot 1, 2, or 3. \n";
-	cin >> savePt;
-	savePt += ".txt";
-	cout << savePt << "\n";
-	outP.open(savePt);
-	outP << "abandonedRoom() \n";
-	outP << name << endl;
-	//	outP << gender << endl;
-	cout << "Thank you, your progress will be automatically saved. \n \n"; */
+
+	cout << "\nThis game does not save at any point. Good Luck " << name << endl;
 
 	abandonedRoom();
-
-}
-
-void loadGame() //function to load a saved game
-{
-	string save;
-	ifstream inP; //ifstream to search for a numbered file
-	cout << "Would you like to load save 1, 2, or 3. \n";
-	cin >> save;
-	save += ".txt";
-
-
-
 
 }
 
@@ -127,9 +112,11 @@ void controls() //function to show the various controls
 	cout << "\t At this point, you can type in 'crowbar' for example, and the crowbar will be added to your inventory. \n \n";
 	cout << "\t Typing in 'lightswitch', would for instance flip the lightswitch. \n";
 
-	cout << "Press M to return to the main menu. \n \n";
+	cout << "Press I to show your Inventory. \n";
 
-	cout << "Press Q to quit. \n \n";
+	cout << "Press M to return to the Main Menu. \n \n";
+
+	cout << "Press Q to Quit. \n \n";
 
 	cout << "Press any key and hit enter to return to the main menu. \n";
 	cin >> next;
@@ -137,21 +124,35 @@ void controls() //function to show the various controls
 	main();
 }
 
+void timer() { //function for the background timer
+	for (wobbly; wobbly > 2; --wobbly)
+	{
+		this_thread::sleep_for(chrono::minutes(1));
+	}
+	cout << "You've got two minutes left! \n";
+	for (wobbly = 120; wobbly != 0; --wobbly)
+	{
+		this_thread::sleep_for(chrono::seconds(1));
+	}
+	timeLoss = 1;
+	endGame();
+}
+
 void abandonedRoom()
 {
 	char move;
-	int cond2 = 0;
 	string pickup;
-	ofstream outP;
 
+	auto future = std::async(timer);
 
 	if (cond2 == 0)
 	{
-		cout << "You wake up on a hard, cold floor. \n";
+		cout << "\n \nYou wake up to a blaring alarm and red flashing lights. \n";
+		cout << "You appear to be on the floor. \n";
 		cout << "As you stand up, you see a door in front of you.\n";
-		cond2 = 1;
+		cout << "All of a sudden, a female voice comes on the speaker system 'Captain required on bridge prior to collision.' \n";
 	}
-
+	cond2 = 1;
 
 	do
 	{
@@ -162,9 +163,9 @@ void abandonedRoom()
 		case 'L':
 		case 'l':
 			if (crowbar == 0)
-				cout << "As your eyes adjust to the harsh light, you notice a crowbar in the corner of the room. \n";
+				cout << "As you look around, you notice a crowbar in the corner of the room. \n";
 			else
-				cout << "The room is pretty bare with some shelves to your left, and a bright white light directly above you. \n You have already picked up the crowbar. \n";
+				cout << "The room is pretty bare with some shelves to your left, and the flashing red lights. \n You have already picked up the crowbar. \n";
 			break;
 		case 'N':
 		case 'n':
@@ -180,17 +181,16 @@ void abandonedRoom()
 		}
 		case 'S':
 		case 's':
-			cout << "There's a wall there. You can't walk through walls. \n";
+			cout << "There's some shelves there but no door. \n";
 			break;
 		case 'W':
 		case 'w':
-			cout << "There's a wall there. You can't walk through walls. \n";
+			cout << "Push as you might. The wall seems solid. \n";
 			break;
 		case 'E':
 		case 'e':
 			cout << "There's a wall there. You can't walk through walls. \n";
 			break;
-
 		case 'G':
 		case 'g':
 			cout << "What would you like to pick up? \n";
@@ -204,16 +204,51 @@ void abandonedRoom()
 			else
 				cout << "That's not here. \n";
 			break;
+		case 'I':
+		case 'i':
+					cout << "You're carrying: \n";
+				if (crowbar == 1)
+						cout << "The crowbar \n";
+				if (taser == 1)
+						cout << "The taser \n";
+				if (Knife == 1)
+					cout << "The knife \n";
+				if (code == 1)
+						cout << "The code in the diary: '1CqM2MvB3EoR' \n";
+				if (keyDang == 1)
+						cout << "The First Key \n";
+				if (key2 == 1)
+						cout << "The Second Key \n";
+				if (key3 == 1)
+						cout << "The Third Key \n";
+				if (Yes == 1)
+						cout << "The alien object \n";
+				if (pda == 1)
+						cout << "The PDA \n";
+			break;
+		case 'p':
+		case 'P':
+			if (pda == 1)
+			{
+				cout << "You are in good health. \n";
+				if (wobbly > 2)
+					cout << wobbly << " minutes \n";
+				else
+					cout << wobbly << " minute remaining. Please hurry!\n";
+				break;
+			}
+			else
+				cout << "Did not recognize that command. Please try something else. \n";
+			break;
 		case 'M':
 		case 'm':
 			main();
 		case 'Q':
 		case 'q':
-			return;
+			exit(0);
 		default:
 			cout << "Did not recognize that command. Please try something else. \n";
 		}
-
 
 	} while (cond != 1);
 
@@ -226,8 +261,9 @@ void hall1SKev()
 
 	cout << "\nYou moved into the hallway after breaking open the door. \n";
 	cout << "There are four rooms in front of you. \n";
-	cout << "And a hallway to the west and east sides. \n";
-
+	cout << "And a hallway to the west and east sides. \n \n";
+	cout << "A small sign in between the doors identifies the doors as Crew Quarters. \n";
+	cout << "The sign also says Bridge, Comms Room, and Weapons Room to the West and Engine Room to the East. \n";
 	do {
 		cout << "What do you want to do? \n";
 		cin >> move;
@@ -236,25 +272,27 @@ void hall1SKev()
 		{
 		case 'L':
 		case 'l':
-			cout << "It's an empty hallway, with a doors in each direction. \n";
+			cout << "It's an empty hallway, with a doors in front of you and a sign. \n";
+			cout << "The small sign identifies the doors as Crew Quarters. \n";
+			cout << "And the sign also reads Bridge, Comms Room, and Weapons Room to the West and Engine Room to the East. \n";
 			break;
 		case 'N':
 		case 'n':
-			cout << "There are 4 rooms. \n";
+			cout << "\nThere are 4 rooms. \n";
 			cout << "Which room did you want to go into? Choose between 1-4. \n";
 			cin >> move2;
 			switch (move2)
 			{
-			case 1:
+			case '1':
 				rm1(); //syed
 				break;
-			case 2:
+			case '2':
 				rm2(); //syed
 				break;
-			case 3:
+			case '3':
 				rm3(); //kevin
 				break;
-			case 4: //alex
+			case '4': //alex
 				rm4();
 				break;
 			default:
@@ -263,29 +301,65 @@ void hall1SKev()
 			break;
 		case 'S':
 		case 's':
-			cout << "You head back to the closet you broke out of. \n";
+			cout << "\nYou head back to the closet you broke out of. \n";
 			abandonedRoom();
 			break;
 		case 'W':
 		case 'w':
-			cout << "You head to the West door. \n";
+			cout << "\nYou head to the West door. \n";
 			hall1WAlex();
 			break;
 		case 'e':
 		case 'E':
-			cout << "You head to the East door. \n";
+			cout << "\nYou head to the East door. \n";
 			hall1E();
 			break;
 		case 'G':
 		case 'g':
-			cout << "There is nothing to pick up here. \n";
+			cout << "\nThere is nothing to pick up here. \n";
+			break;
+		case 'I':
+		case 'i':
+			cout << "You're carrying: \n";
+			if (crowbar == 1)
+				cout << "The crowbar \n";
+			if (taser == 1)
+				cout << "The taser \n";
+			if (Knife == 1)
+				cout << "The knife \n";
+			if (code == 1)
+				cout << "The code in the diary: '1CqM2MvB3EoR' \n";
+			if (keyDang == 1)
+				cout << "The First Key \n";
+			if (key2 == 1)
+				cout << "The Second Key \n";
+			if (key3 == 1)
+				cout << "The Third Key \n";
+			if (Yes == 1)
+				cout << "The alien object \n";
+			if (pda == 1)
+				cout << "The PDA \n";
+			break;
+		case 'p':
+		case 'P':
+			if (pda == 1)
+			{
+				cout << "You are in good health. \n";
+				if (wobbly > 1)
+					cout << wobbly << " minutes \n";
+				else
+					cout << wobbly << " minute remaining. Please hurry!\n";
+				break;
+			}
+			else
+				cout << "Did not recognize that command. Please try something else. \n";
 			break;
 		case 'M':
 		case 'm':
 			main();
 		case 'Q':
 		case 'q':
-			return;
+			exit(0);
 		default:
 			cout << "Did not recognize that command. Please try something else. \n";
 		}
@@ -301,6 +375,7 @@ void hall1WAlex()
 	cout << "Behind you is the South Hallway. \n";
 	cout << "Up ahead is the North Hallway. \n";
 	cout << "There are two doors to the West named Weapons Room and Communications Room. \n";
+	cout << "There is a sign between the doors that reads 'Bridge past Weapons and Communications Room. \n";
 
 	do {
 		cout << "What do you want to do? \n";
@@ -325,7 +400,7 @@ void hall1WAlex()
 		case 'W':
 		case 'w':
 			cout << "There are 2 doors. \n";
-			cout << "Which room did you want to go into? Choose between 1 for the Comms Room and 2 for the Weapons Room. \n";
+			cout << "Which room did you want to go into? Choose between C for the Comms Room and W for the Weapons Room. \n";
 			cin >> move2;
 			switch (move2)
 			{
@@ -337,6 +412,12 @@ void hall1WAlex()
 			case 'W':
 				weaponsRm();
 				break;
+			case 'M':
+			case 'm':
+				main();
+			case 'Q':
+			case 'q':
+				return;
 			default:
 				cout << "Didn't understand your command. \n";
 			}
@@ -352,12 +433,48 @@ void hall1WAlex()
 		case 'g':
 			cout << "There is nothing to pick up here. \n";
 			break;
+		case 'I':
+		case 'i':
+			cout << "You're carrying: \n";
+			if (crowbar == 1)
+				cout << "The crowbar \n";
+			if (taser == 1)
+				cout << "The taser \n";
+			if (Knife == 1)
+				cout << "The knife \n";
+			if (code == 1)
+				cout << "The code in the diary: '1CqM2MvB3EoR' \n";
+			if (keyDang == 1)
+				cout << "The First Key \n";
+			if (key2 == 1)
+				cout << "The Second Key \n";
+			if (key3 == 1)
+				cout << "The Third Key \n";
+			if (Yes == 1)
+				cout << "The alien object \n";
+			if (pda == 1)
+				cout << "The PDA \n";
+			break;
+		case 'p':
+		case 'P':
+			if (pda == 1)
+			{
+				cout << "You are in good health. \n";
+				if (wobbly > 1)
+					cout << wobbly << " minutes \n";
+				else
+					cout << wobbly << " minute remaining. Please hurry!\n";
+				break;
+			}
+			else
+				cout << "Did not recognize that command. Please try something else. \n";
+			break;
 		case 'M':
 		case 'm':
 			main();
 		case 'Q':
 		case 'q':
-			return;
+			exit(0);
 		default:
 			cout << "Did not recognize that command. Please try something else. \n";
 		}
@@ -382,7 +499,8 @@ void hall1E()
 		{
 		case 'L':
 		case 'l':
-			cout << "The entrance to the Engine Room is here. \n";
+			cout << "The entrance to the Engine Room is here, to the East. \n";
+			cout << "The Med Bay is to the West. \n";
 			break;
 		case 'N':
 		case 'n':
@@ -408,12 +526,48 @@ void hall1E()
 		case 'g':
 			cout << "There isn't anything to grab here. ";
 			break;
+		case 'I':
+		case 'i':
+			cout << "You're carrying: \n";
+			if (crowbar == 1)
+				cout << "The crowbar \n";
+			if (taser == 1)
+				cout << "The taser \n";
+			if (Knife == 1)
+				cout << "The knife \n";
+			if (code == 1)
+				cout << "The code in the diary: '1CqM2MvB3EoR' \n";
+			if (keyDang == 1)
+				cout << "The First Key \n";
+			if (key2 == 1)
+				cout << "The Second Key \n";
+			if (key3 == 1)
+				cout << "The Third Key \n";
+			if (Yes == 1)
+				cout << "The alien object \n";
+			if (pda == 1)
+				cout << "The PDA \n";
+			break;
+		case 'p':
+		case 'P':
+			if (pda == 1)
+			{
+				cout << "You are in good health. \n";
+				if (wobbly > 1)
+					cout << wobbly << " minutes \n";
+				else
+					cout << wobbly << " minute remaining. Please hurry!\n";
+				break;
+			}
+			else
+				cout << "Did not recognize that command. Please try something else. \n";
+			break;
 		case 'M':
 		case 'm':
 			main();
 		case 'Q':
 		case 'q':
-			return;
+			exit(0);
 		default:
 			cout << "Did not recognize that command. Please try something else. \n";
 		}
@@ -430,7 +584,7 @@ void hall1N()
 	cout << "You moved into the North Hallway. \n";
 	cout << "There are two doors to the South. One is marked as Cafeteria and the other as Med Bay. \n";
 	cout << "There are also hallways to the West and East . \n";
-
+	cout << "A sign between the doors again reads 'Bridge to the West. Engine Room to the East' ";
 	do {
 		cout << "What do you want to do? \n";
 		cin >> move;
@@ -449,7 +603,7 @@ void hall1N()
 		case 'S':
 		case 's':
 			cout << "There are 2 rooms.\n";
-			cout << "Which room did you want to go into? Enter 1 for the Cafeteria and 2 for the Med Bay.";
+			cout << "Which room did you want to go into? Enter C for the Cafeteria and M for the Med Bay.";
 			cin >> move2;
 			switch (move2)
 			{
@@ -480,12 +634,48 @@ void hall1N()
 		case 'g':
 			cout << "There is nothing to pick up here. \n";
 			break;
+		case 'I':
+		case 'i':
+			cout << "You're carrying: \n";
+			if (crowbar == 1)
+				cout << "The crowbar \n";
+			if (taser == 1)
+				cout << "The taser \n";
+			if (Knife == 1)
+				cout << "The knife \n";
+			if (code == 1)
+				cout << "The code in the diary: '1CqM2MvB3EoR' \n";
+			if (keyDang == 1)
+				cout << "The First Key \n";
+			if (key2 == 1)
+				cout << "The Second Key \n";
+			if (key3 == 1)
+				cout << "The Third Key \n";
+			if (Yes == 1)
+				cout << "The alien object \n";
+			if (pda == 1)
+				cout << "The PDA \n";
+			break;
+		case 'p':
+		case 'P':
+			if (pda == 1)
+			{
+				cout << "You are in good health. \n";
+				if (wobbly > 1)
+					cout << wobbly << " minutes \n";
+				else
+					cout << wobbly << " minute remaining. Please hurry!\n";
+				break;
+			}
+			else
+				cout << "Did not recognize that command. Please try something else. \n";
+			break;
 		case 'M':
 		case 'm':
 			main();
 		case 'Q':
 		case 'q':
-			return;
+			exit(0);
 		default:
 			cout << "Did not recognize that command. Please try something else. \n";
 		}
@@ -497,7 +687,7 @@ void cafe()
 {
 	char move;
 	string pickup;
-	cout << "  \n";
+	cout << "You enter the cafeteria of the ship. \n";
 
 	do {
 		cout << "What do you want to do? \n";
@@ -511,7 +701,7 @@ void cafe()
 			break;
 		case 'N':
 		case 'n':
-			cout << " \n";
+			cout << "You head up to the North Hallway \n";
 			hall1N();
 			break;
 		case 'S':
@@ -540,12 +730,48 @@ void cafe()
 			else
 				cout << "That's not here. \n";
 			break;
+		case 'I':
+		case 'i':
+			cout << "You're carrying: \n";
+			if (crowbar == 1)
+				cout << "The crowbar \n";
+			if (taser == 1)
+				cout << "The taser \n";
+			if (Knife == 1)
+				cout << "The knife \n";
+			if (code == 1)
+				cout << "The code in the diary: '1CqM2MvB3EoR' \n";
+			if (keyDang == 1)
+				cout << "The First Key \n";
+			if (key2 == 1)
+				cout << "The Second Key \n";
+			if (key3 == 1)
+				cout << "The Third Key \n";
+			if (Yes == 1)
+				cout << "The alien object \n";
+			if (pda == 1)
+				cout << "The PDA \n";
+			break;
+		case 'p':
+		case 'P':
+			if (pda == 1)
+			{
+				cout << "You are in good health. \n";
+				if (wobbly > 1)
+					cout << wobbly << " minutes \n";
+				else
+					cout << wobbly << " minute remaining. Please hurry!\n";
+				break;
+			}
+			else
+				cout << "Did not recognize that command. Please try something else. \n";
+			break;
 		case 'M':
 		case 'm':
 			main();
 		case 'Q':
 		case 'q':
-			return;
+			exit(0);
 		default:
 			cout << "Did not recognize that command. Please try something. \n";
 		}
@@ -557,7 +783,7 @@ void medBay()
 {
 	char move;
 	string pickup;
-	cout << "  \n";
+	cout << "This ship's Medical Bay seems quite advanced. \n";
 
 	do {
 		cout << "What do you want to do? \n";
@@ -590,12 +816,48 @@ void medBay()
 		case 'g':
 			cout << " ";
 			break;
+		case 'I':
+		case 'i':
+			cout << "You're carrying: \n";
+			if (crowbar == 1)
+				cout << "The crowbar \n";
+			if (taser == 1)
+				cout << "The taser \n";
+			if (Knife == 1)
+				cout << "The knife \n";
+			if (code == 1)
+				cout << "The code in the diary: '1CqM2MvB3EoR' \n";
+			if (keyDang == 1)
+				cout << "The First Key \n";
+			if (key2 == 1)
+				cout << "The Second Key \n";
+			if (key3 == 1)
+				cout << "The Third Key \n";
+			if (Yes == 1)
+				cout << "The alien object \n";
+			if (pda == 1)
+				cout << "The PDA \n";
+			break;
+		case 'p':
+		case 'P':
+			if (pda == 1)
+			{
+				cout << "You are in good health. \n";
+				if (wobbly > 1)
+					cout << wobbly << " minutes \n";
+				else
+					cout << wobbly << " minute remaining. Please hurry!\n";
+				break;
+			}
+			else
+				cout << "Did not recognize that command. Please try something else. \n";
+			break;
 		case 'M':
 		case 'm':
 			main();
 		case 'Q':
 		case 'q':
-			return;
+			exit(0);
 		default:
 			cout << "Did not recognize that command. Please try something. \n";
 		}
@@ -607,7 +869,7 @@ void rm1() //syed
 {
 	char move;
 	string pickup;
-	cout << "  \n";
+	cout << "You enter the first room. \n";
 
 	do {
 		cout << "What do you want to do? \n";
@@ -617,6 +879,7 @@ void rm1() //syed
 		case 'L':
 		case 'l':
 			cout << "There is a rotten dead body on the floor. It is too stinky!\n";
+			cout << "There's also a desk with a diary beneath it. \n";
 			break;
 		case 'N':
 		case 'n':
@@ -637,14 +900,64 @@ void rm1() //syed
 			break;
 		case 'G':
 		case 'g':
-			cout << " ";
+			cout << "What would you like to do? \n";
+			cin.ignore();
+			getline(cin, pickup);
+			 if (pickup == "diary" || pickup == "Diary")
+		{
+			cout << "A piece of paper falls out of the diary. \n";
+			cout << "It has a set of letters and numbers written on it. \n";
+			cout << "\n*** 1CqM2MvB3EoR ***\n";
+			code = 1;
+
+		}
+		else
+		{
+			cout << "That item isn't in this room.";
+		}
+		break;
+		case 'I':
+		case 'i':
+			cout << "You're carrying: \n";
+			if (crowbar == 1)
+				cout << "The crowbar \n";
+			if (taser == 1)
+				cout << "The taser \n";
+			if (Knife == 1)
+				cout << "The knife \n";
+			if (code == 1)
+				cout << "The code in the diary: '1CqM2MvB3EoR' \n";
+			if (keyDang == 1)
+				cout << "The First Key \n";
+			if (key2 == 1)
+				cout << "The Second Key \n";
+			if (key3 == 1)
+				cout << "The Third Key \n";
+			if (Yes == 1)
+				cout << "The alien object \n";
+			if (pda == 1)
+				cout << "The PDA \n";
+			break;
+		case 'p':
+		case 'P':
+			if (pda == 1)
+			{
+				cout << "You are in good health. \n";
+				if (wobbly > 1)
+					cout << wobbly << " minutes \n";
+				else
+					cout << wobbly << " minute remaining. Please hurry!\n";
+				break;
+			}
+			else
+				cout << "Did not recognize that command. Please try something else. \n";
 			break;
 		case 'M':
 		case 'm':
 			main();
 		case 'Q':
 		case 'q':
-			return;
+			exit(0);
 		default:
 			cout << "Did not recognize that command. Please try something. \n";
 		}
@@ -666,11 +979,11 @@ void rm2() //syed
 		{
 		case 'L':
 		case 'l':
-			cout << " \n";
+			cout << "There's a few boxes scattered around but they look like they've been ransacked. \n";
 			break;
 		case 'N':
 		case 'n':
-			cout << " \n";
+			cout << "That's a wall \n";
 			break;
 		case 'S':
 		case 's':
@@ -687,13 +1000,50 @@ void rm2() //syed
 			break;
 		case 'G':
 		case 'g':
-			cout << " ";
+			cout << "Boxes are empty so nothing to pick up \n ";
+			break;
+		case 'I':
+		case 'i':
+			cout << "You're carrying: \n";
+			if (crowbar == 1)
+				cout << "The crowbar \n";
+			if (taser == 1)
+				cout << "The taser \n";
+			if (Knife == 1)
+				cout << "The knife \n";
+			if (code == 1)
+				cout << "The code in the diary: '1CqM2MvB3EoR' \n";
+			if (keyDang == 1)
+				cout << "The First Key \n";
+			if (key2 == 1)
+				cout << "The Second Key \n";
+			if (key3 == 1)
+				cout << "The Third Key \n";
+			if (Yes == 1)
+				cout << "The alien object \n";
+			if (pda == 1)
+				cout << "The PDA \n";
+			break;
+		case 'p':
+		case 'P':
+			if (pda == 1)
+			{
+				cout << "You are in good health. \n";
+				if (wobbly > 1)
+					cout << wobbly << " minutes \n";
+				else
+					cout << wobbly << " minute remaining. Please hurry!\n";
+				break;
+			}
+			else
+				cout << "Did not recognize that command. Please try something else. \n";
+			break;
 		case 'M':
 		case 'm':
 			main();
 		case 'Q':
 		case 'q':
-			return;
+			exit(0);
 		default:
 			cout << "Did not recognize that command. Please try something. \n";
 		}
@@ -706,9 +1056,8 @@ void rm3() //kevin
 {
 	char move;
 	string pickup;
-	int treasureBox;
-	cout << " You've walked into the third room. \n";
-	cout << " It seems like somebody's bedroom. \n";
+	cout << "You've walked into the third room. \n";
+	cout << "It seems like somebody's bedroom. \n";
 
 	do
 	{
@@ -718,16 +1067,16 @@ void rm3() //kevin
 		{
 		case 'L':
 		case 'l':
-			cout << " After looking around you see a treasure box. \n";
-			cout << " You're surprised to see a treasure box because this a space ship. \n";
+			cout << "After looking around, you notice a small cabinet in the corner. \n";
+			cout << "There's a bed but it's pretty bare. \n";
 			break;
 		case 'N':
 		case 'n':
-			cout << " That's a wall there.\n";
+			cout << "That's a wall there.\n";
 			break;
 		case 'S':
 		case 's':
-			cout << " \n";
+			cout << "You return to the South Hallway \n";
 			hall1SKev();
 			break;
 		case 'W':
@@ -743,31 +1092,59 @@ void rm3() //kevin
 			cout << "What would you like to do? \n";
 			cin.ignore();
 			getline(cin, pickup);
-			if (pickup == "Treasure Box" || pickup == "treasure box" || pickup == "treasure" || pickup == "box")
+			if (pickup == "cabinet" || pickup == "Cabinet")
 			{
-				treasureBox = 1;
-				cout << "There was nothing in the treasure box. Keep looking \n";
-
-			}
-			else if (pickup == "diary" || pickup == "Diary")
-			{
-				cout << "A piece of paper falls out of the diary. \n";
-				cout << "It has a set of letters and numbers written on it. \n";
-				cout << "1CqM2MvB3EoR";
+				cabinet = 1;
+				cout << "There was nothing in the cabinet. Keep looking \n";
 
 			}
 			else
 			{
 				cout << "That item isn't in this room.";
-
 			}
-
+			break;
+		case 'I':
+		case 'i':
+			cout << "You're carrying: \n";
+			if (crowbar == 1)
+				cout << "The crowbar \n";
+			if (taser == 1)
+				cout << "The taser \n";
+			if (Knife == 1)
+				cout << "The knife \n";
+			if (code == 1)
+				cout << "The code in the diary: '1CqM2MvB3EoR' \n";
+			if (keyDang == 1)
+				cout << "The First Key \n";
+			if (key2 == 1)
+				cout << "The Second Key \n";
+			if (key3 == 1)
+				cout << "The Third Key \n";
+			if (Yes == 1)
+				cout << "The alien object \n";
+			if (pda == 1)
+				cout << "The PDA \n";
+			break;
+		case 'p':
+		case 'P':
+			if (pda == 1)
+			{
+				cout << "You are in good health. \n";
+				if (wobbly > 1)
+					cout << wobbly << " minutes \n";
+				else
+					cout << wobbly << " minute remaining. Please hurry!\n";
+				break;
+			}
+			else
+				cout << "Did not recognize that command. Please try something else. \n";
+			break;
 		case 'M':
 		case 'm':
 			main();
 		case 'Q':
 		case 'q':
-			return;
+			exit(0);
 		default:
 			cout << "Did not recognize that command. Please try something. \n";
 		}
@@ -781,7 +1158,7 @@ void rm4()
 {
 	char move;
 	string pickup;
-	cout << "  \n";
+	cout << "This is the last room in the hallway. \n";
 
 	do {
 		cout << "What do you want to do? \n";
@@ -800,7 +1177,7 @@ void rm4()
 			break;
 		case 'S':
 		case 's':
-			cout << " \n";
+			cout << "You return to the South Hallway. \n";
 			hall1SKev();
 			break;
 		case 'W':
@@ -824,12 +1201,48 @@ void rm4()
 			else
 				cout << "That's not here. \n";
 			break;
+		case 'I':
+		case 'i':
+			cout << "You're carrying: \n";
+			if (crowbar == 1)
+				cout << "The crowbar \n";
+			if (taser == 1)
+				cout << "The taser \n";
+			if (Knife == 1)
+				cout << "The knife \n";
+			if (code == 1)
+				cout << "The code in the diary: '1CqM2MvB3EoR' \n";
+			if (keyDang == 1)
+				cout << "The First Key \n";
+			if (key2 == 1)
+				cout << "The Second Key \n";
+			if (key3 == 1)
+				cout << "The Third Key \n";
+			if (Yes == 1)
+				cout << "The alien object \n";
+			if (pda == 1)
+				cout << "The PDA \n";
+			break;
+		case 'p':
+		case 'P':
+			if (pda == 1)
+			{
+				cout << "You are in good health. \n";
+				if (wobbly > 1)
+					cout << wobbly << " minutes \n";
+				else
+					cout << wobbly << " minute remaining. Please hurry!\n";
+				break;
+			}
+			else
+				cout << "Did not recognize that command. Please try something else. \n";
+			break;
 		case 'M':
 		case 'm':
 			main();
 		case 'Q':
 		case 'q':
-			return;
+			exit(0);
 		default:
 			cout << "Did not recognize that command. Please try something. \n";
 		}
@@ -841,7 +1254,7 @@ void engineRm()
 {
 	char move;
 	string pickup;
-	cout << "Looks like you entered into the engine room.\n ";
+	cout << "Looks like you entered into the engine room.\n";
 	cout << "There is a little light inside but no one is here.\n";
 
 	do {
@@ -872,14 +1285,59 @@ void engineRm()
 			break;
 		case 'G':
 		case 'g':
-			cout << " ";
+			cout << "Would you like to pick up the unknown item? \n";
+			cin.ignore(); //ignores other things that were typed before here
+			getline(cin, pickup); //so this only accepts stuff after the line
+			if (pickup == "key" || pickup == "Key") //two spellings in case the user doesn't want to use capital letters
+			{
+				key2 = 1;
+				cout << "You've picked up the key. It has been added to your inventory. \n";
+			}
+			else
+				cout << "That's not here. \n";
+			break;
+		case 'I':
+		case 'i':
+			cout << "You're carrying: \n";
+			if (crowbar == 1)
+				cout << "The crowbar \n";
+			if (taser == 1)
+				cout << "The taser \n";
+			if (Knife == 1)
+				cout << "The knife \n";
+			if (code == 1)
+				cout << "The code in the diary: '1CqM2MvB3EoR' \n";
+			if (keyDang == 1)
+				cout << "The First Key \n";
+			if (key2 == 1)
+				cout << "The Second Key \n";
+			if (key3 == 1)
+				cout << "The Third Key \n";
+			if (Yes == 1)
+				cout << "The alien object \n";
+			if (pda == 1)
+				cout << "The PDA \n";
+			break;
+		case 'p':
+		case 'P':
+			if (pda == 1)
+			{
+				cout << "You are in good health. \n";
+				if (wobbly > 1)
+					cout << wobbly << " minutes \n";
+				else
+					cout << wobbly << " minute remaining. Please hurry!\n";
+				break;
+			}
+			else
+				cout << "Did not recognize that command. Please try something else. \n";
 			break;
 		case 'M':
 		case 'm':
 			main();
 		case 'Q':
 		case 'q':
-			return;
+			exit(0);
 		default:
 			cout << "Did not recognize that command. Please try something. \n";
 		}
@@ -929,17 +1387,53 @@ void weaponsRm()
 			if (pickup == "taser" || pickup == "Taser") //two spellings in case the user doesn't want to use capital letters
 			{
 				taser = 1;
-				cout << "You've picked up the taser It has been added to your inventory. \n";
+				cout << "You've picked up the taser. It has been added to your inventory. \n";
 			}
 			else
 				cout << "That's not here. \n";
+			break;
+		case 'I':
+		case 'i':
+			cout << "You're carrying: \n";
+			if (crowbar == 1)
+				cout << "The crowbar \n";
+			if (taser == 1)
+				cout << "The taser \n";
+			if (Knife == 1)
+				cout << "The knife \n";
+			if (code == 1)
+				cout << "The code in the diary: '1CqM2MvB3EoR' \n";
+			if (keyDang == 1)
+				cout << "The First Key \n";
+			if (key2 == 1)
+				cout << "The Second Key \n";
+			if (key3 == 1)
+				cout << "The Third Key \n";
+			if (Yes == 1)
+				cout << "The alien object \n";
+			if (pda == 1)
+				cout << "The PDA \n";
+			break;
+		case 'p':
+		case 'P':
+			if (pda == 1)
+			{
+				cout << "You are in good health. \n";
+				if (wobbly > 1)
+					cout << wobbly << " minutes \n";
+				else
+					cout << wobbly << " minute remaining. Please hurry!\n";
+				break;
+			}
+			else
+				cout << "Did not recognize that command. Please try something else. \n";
 			break;
 		case 'M':
 		case 'm':
 			main();
 		case 'Q':
 		case 'q':
-			return;
+			exit(0);
 		default:
 			cout << "Did not recognize that command. Please try something. \n";
 		}
@@ -972,8 +1466,15 @@ void commsRm()
 			break;
 		case 'W':
 		case 'w':
-			cout << "bridge \n";
+		{cout << "bridge \n";
+		if (keyDang == 1 && key2 == 1 && key3 == 1)
+		{
+			bridgeKeys();
+		}
+		else
+		{
 			bridge();
+		}}
 			break;
 		case 'e':
 		case 'E':
@@ -990,12 +1491,48 @@ void commsRm()
 				cout << "You opened the key vault and obtained a key. \n";
 			}
 			break;
+		case 'I':
+		case 'i':
+			cout << "You're carrying: \n";
+			if (crowbar == 1)
+				cout << "The crowbar \n";
+			if (taser == 1)
+				cout << "The taser \n";
+			if (Knife == 1)
+				cout << "The knife \n";
+			if (code == 1)
+				cout << "The code in the diary: '1CqM2MvB3EoR' \n";
+			if (keyDang == 1)
+				cout << "The First Key \n";
+			if (key2 == 1)
+				cout << "The Second Key \n";
+			if (key3 == 1)
+				cout << "The Third Key \n";
+			if (Yes == 1)
+				cout << "The alien object \n";
+			if (pda == 1)
+				cout << "The PDA \n";
+			break;
+		case 'p':
+		case 'P':
+			if (pda == 1)
+			{
+				cout << "You are in good health. \n";
+				if (wobbly > 1)
+					cout << wobbly << " minutes \n";
+				else
+					cout << wobbly << " minute remaining. Please hurry!\n";
+				break;
+			}
+			else
+				cout << "Did not recognize that command. Please try something else. \n";
+			break;
 		case 'M':
 		case 'm':
 			main();
 		case 'Q':
 		case 'q':
-			return;			
+			exit(0);
 		default:
 			cout << "Did not recognize that command. Please try something. \n";
 		}
@@ -1005,12 +1542,14 @@ void commsRm()
 
 void bridge()
 {
-	char move;
-	char move2;
+	char move, move2;
 	string pickup;
 
 	cout << "You've reached the bridge of the ship. \n";
-
+	if (cond3 == 0)
+	{
+		cout << "The blaring alarms continue in the background. \n";
+	}
 	do {
 		cout << "What do you want to do? \n";
 		cin >> move;
@@ -1018,9 +1557,8 @@ void bridge()
 		{
 		case 'L':
 		case 'l':
-			cout << "There is a screen on in the center of the room but it says it requires three keycards. \n";
-			cout << "They don't seem to be around here. \n";
-			cout << "Maybe look around in the other rooms of the ship to see what else you can find. \n";
+			cout << "There is a computer on in the center of the room. \n";
+			cout << "There is also a pedestal next to it with something on top. \n";
 			break;
 		case 'N':
 		case 'n':
@@ -1056,15 +1594,78 @@ void bridge()
 				}
 			} while (cond != 1);
 			break;
-		case 'G':
+		case 'G': //action key
 		case 'g':
-			cout << " ";
+			cout << "What would you like to do? \n";
+			cin.ignore();
+			getline(cin, pickup);
+			if (pickup == "computer" || pickup == "Computer")
+			{
+				computer = 1;
+				cond3 = 1;
+				cout << "When you touch the computer, the flashing lights stop flashing and change to a bright white, and the alarms turn off. \n";
+				cout << "However, the screen displays a gigantic rock directly ahead of the ship and the words: \n";
+				cout << "Time to Collision: " << wobbly << " minutes. \n";
+				cout << "Please enter captain's keys and prepare alternative route. \n";
+				cout << "Now to look for the keys. \n";
+
+			}
+			else if (pickup == "pedestal" || pickup == "Pedestal")
+			{
+				cout << "There's a PDA on the pedestal. \n";
+				cout << "You grab it and turn it on. \n";
+				cout << "It scans and tells you about your health and important information about the ship. \n";
+				cout << "Press 'P' to use the PDA.";
+				pda = 1;
+
+			}
+			else
+			{
+				cout << "That item isn't in this room.";
+			}
+			break;
+		case 'I':
+		case 'i':
+			cout << "You're carrying: \n";
+			if (crowbar == 1)
+				cout << "The crowbar \n";
+			if (taser == 1)
+				cout << "The taser \n";
+			if (Knife == 1)
+				cout << "The knife \n";
+			if (code == 1)
+				cout << "The code in the diary: '1CqM2MvB3EoR' \n";
+			if (keyDang == 1)
+				cout << "The First Key \n";
+			if (key2 == 1)
+				cout << "The Second Key \n";
+			if (key3 == 1)
+				cout << "The Third Key \n";
+			if (Yes == 1)
+				cout << "The alien object \n";
+			if (pda == 1)
+				cout << "The PDA \n";
+			break;
+		case 'p':
+		case 'P':
+			if (pda == 1)
+			{
+				cout << "You are in good health. \n";
+				if (wobbly > 1)
+					cout << wobbly << " minutes \n";
+				else
+					cout << wobbly << " minute remaining. Please hurry!\n";
+				break;
+			}
+			else
+				cout << "Did not recognize that command. Please try something else. \n";
+			break;
 		case 'M':
 		case 'm':
 			main();
 		case 'Q':
 		case 'q':
-			return;
+			exit(0);
 		default:
 			cout << "Did not recognize that command. Please try something. \n";
 		}
@@ -1072,50 +1673,148 @@ void bridge()
 	} while (cond != 1);
 }
 
-/*void airLock()
+void bridgeKeys()
 {
-char move;
-string pickup;
-cout << "  \n";
-do {
-cout << "What do you want to do? \n";
-cin >> move;
-switch (move)
-{
-case 'L':
-case 'l':
-cout << "You have entered the airlock. There is nothing here currently. \n";
-break;
-case 'N':
-case 'n':
-cout << " \n";
-break;
-case 'S':
-case 's':
-cout << " \n";
-//hall1S();
-break;
-case 'W':
-case 'w':
-cout << " \n";
-//hall1W();
-break;
-case 'e':
-case 'E':
-cout << " \n";
-//hall1E();
-break;
-case 'G':
-case 'g':
-cout << " ";
-case 'M':
-case 'm':
-main();
-case 'Q':
-case 'q':
-return;
-default:
-cout << "Did not recognize that command. Please try something. \n";
+	char move, move2;
+	string pickup; //variable to accept the item name
+	cout << "You return to the bridge with all the keys \n";
+	cin >> move;
+
+		do {
+			cout << "What do you want to do?\n";
+			cin >> move;
+			switch (move)
+			{
+			case 'L':
+			case 'l':
+				cout << " \n";
+				break;
+			case 'N':
+			case 'n':
+				cout << "Goes North \n";
+				break;
+			case 'S':
+			case 's':
+				cout << "South \n";
+				break;
+			case 'W':
+			case 'w':
+				cout << "West \n";
+				break;
+			case 'e':
+			case 'E':
+				cout << "There are 2 rooms in that direction.\n";
+				do
+				{
+					cout << "The first room is the Communications Room and the other is the Weapons Room.\n";
+					cin >> move2;
+					switch (move2)
+					{
+					case 'C':
+					case 'c':
+						commsRm();
+						break;
+					case 'w':
+					case 'W':
+						weaponsRm();
+						break;
+					default:
+						cout << "Didn't understand your command. \n";
+					}
+				} while (cond != 1);
+				break;
+			case 'G':
+			case 'g':
+				cout << "What would you like to pick up? \n";
+				cin.ignore(); //ignores other things that were typed before here
+				getline(cin, pickup); //so this only accepts stuff after the line
+				if (pickup == "Item" || pickup == "item") //two spellings in case the user doesn't want to use capital letters
+				{
+					
+					cout << "You've picked up the item. It has been added to your inventory. \n";
+				}
+				else
+					cout << "That's not here. \n";
+				break;
+			case 'I':
+			case 'i':
+				cout << "You're carrying: \n";
+				if (crowbar == 1)
+					cout << "The crowbar \n";
+				if (taser == 1)
+					cout << "The taser \n";
+				if (Knife == 1)
+					cout << "The knife \n";
+				if (code == 1)
+					cout << "The code in the diary: '1CqM2MvB3EoR' \n";
+				if (keyDang == 1)
+					cout << "The First Key \n";
+				if (key2 == 1)
+					cout << "The Second Key \n";
+				if (key3 == 1)
+					cout << "The Third Key \n";
+				if (Yes == 1)
+					cout << "The alien object \n";
+				if (pda == 1)
+					cout << "The PDA \n";
+				break;
+			case 'p':
+			case 'P':
+				if (pda == 1)
+				{
+					cout << "You are in good health. \n";
+					if (wobbly > 1)
+						cout << wobbly << " minutes \n";
+					else
+						cout << wobbly << " minute remaining. Please hurry!\n";
+					break;
+				}
+				else
+					cout << "Did not recognize that command. Please try something else. \n";
+				break;
+			case 'M':
+			case 'm':
+				main();
+			case 'Q':
+			case 'q':
+				exit(0);
+			default:
+				cout << "Did not recognize that command. Please try something. \n";
+			}
+
+		} while (cond != 1);
 }
-} while (cond != 1);
-}*/
+
+void endGame()
+{
+	char final;
+
+	if (timeLoss == 1)
+	{
+		cout << "\nYou were not fast enough in finding the keys. \n";
+		cout << "The ship crash-landed on a dark moon and subsequently exploded. \n";
+		cout << "It was quite painful.\n \n";
+		cout << "To return to the Main Menu, choose 'M'. Otherwise hit any other key to Quit. \n";
+		cin >> final;
+
+		switch (final)
+		{
+		case 'm':
+		case 'M':
+			cond = 0; cond2 = 0; cond3 = 0;
+			crowbar = 0; taser = 0; Knife = 0;
+			cabinet = 0; code = 0;
+			keyDang = 0; key2 = 0; key3 = 0;
+			passCode = 0;
+			Yes = 0;
+			computer = 0; pda = 0;
+			timeLoss = 0;
+			wobbly = 30;
+			main();
+		case 'q':
+		case 'Q':
+			exit(0);
+
+		}
+	}
+}
