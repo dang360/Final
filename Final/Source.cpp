@@ -150,7 +150,7 @@ void abandonedRoom()
 		cout << "\n \nYou wake up to a blaring alarm and red flashing lights. \n";
 		cout << "You appear to be on the floor. \n";
 		cout << "As you stand up, you see a door in front of you.\n";
-		cout << "All of a sudden, a female voice comes on the speaker system 'Captain required on bridge prior to collision.' \n";
+		cout << "All of a sudden, a robotic, female voice comes on the speaker system 'Captain required on bridge prior to collision.' \n";
 	}
 	cond2 = 1;
 
@@ -1604,7 +1604,7 @@ void bridge()
 				computer = 1;
 				cond3 = 1;
 				cout << "When you touch the computer, the flashing lights stop flashing and change to a bright white, and the alarms turn off. \n";
-				cout << "However, the screen displays a gigantic rock directly ahead of the ship and the words: \n";
+				cout << "However, the screen displays a large moon directly ahead of the ship and the words: \n";
 				cout << "Time to Collision: " << wobbly << " minutes. \n";
 				cout << "Please enter captain's keys and prepare alternative route. \n";
 				cout << "Now to look for the keys. \n";
