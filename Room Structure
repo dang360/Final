@@ -72,7 +72,7 @@ void roomName()
 		main();
 	case 'Q':
 	case 'q':
-		return;
+		exit(0);
 	default :
 		cout << "Did not recognize that command. Please try something. \n";
   	}
