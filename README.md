@@ -1,12 +1,7 @@
 # Final
-UPDATED 4/26
+5/1
 
-So, this is what I've done so far.
-
-You can look at the code if you click on the "Final" folder above and click Source.cpp.
-
-Saving and loading removed. Maybe completely.
-
+Saving and loading removed. 
 
 The controls are there and are a guideline of what you can do in game
 
@@ -19,10 +14,14 @@ The Crowbar is an example of how to add stuff to the inventory, like the keycard
 Just set a global variable for it at the top and then look at the abandonedRoom function to see how it works.
 I'll be adding more later today but I can't right now.
 
-Fixed the looping errors from the other day
-
-
 Map- http://imgur.com/a/V4Yw4
 
 
 If you come up with any story ideas or anything, let me know or just add it to your room.
+
+Added a timer so anybody playing only has 30 minutes to finish the game.
+Added an inventory.
+Added a PDA which you can use to check how much time you have left.
+
+4 rooms need to be finished but they should be done by 5/2 
+
