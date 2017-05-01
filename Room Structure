@@ -42,7 +42,7 @@ void roomName()
 		cout << "West \n";
 		westRoom();
 		break;
-	case 'e':
+	case 'E':
 	case 'e':
 		cout << " \n";
 		eastRoom();
